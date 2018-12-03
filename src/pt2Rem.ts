@@ -4,17 +4,17 @@ import { configKey } from './constant'
 const install = () => {
     let config = vscode.workspace.getConfiguration(configKey)
 
-    // if (!config || !config.enabled) {
-    //     return
-    // }
+    if (!config || !config.enabled) {
+        return
+    }
 
     let key = 'pt2rem'
-
-    let bw = config.baseWidth || 375
-    let aimRem = config.aimRem || 20;
-
     let types = Object.assign({
-        pt2rem: `{num}*${aimRem}/${bw}`
+        pt2rem: {
+            cal: `{num}*20/375`,
+            after: 'rem',
+            before: ''
+        }
     }, config.types);
 
     let ps = Object.keys(types)
@@ -38,7 +38,7 @@ const install = () => {
                 if (!st) {
                     return
                 }
-                let cal = types[st];
+                let cal = types[st].cal || types[st];
                 vscode.window.showInputBox({
                     placeHolder: '输入设计稿pt'
                 }).then(v => {
@@ -46,7 +46,7 @@ const install = () => {
                     let nv = eval(cal.replace('{num}', v));
                     nv = (+nv).toFixed(4)
                     e.textEditor.edit(eb => {
-                        eb.replace(r, nv + 'rem')
+                        eb.replace(r, (types[st].before || '') + nv + (types[st].after || ''))
                     })
                 })
             })
