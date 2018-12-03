@@ -1,0 +1,1 @@
+export const configKey = "pt2rem"
