@@ -4,7 +4,7 @@ import { configKey } from './constant'
 const install = () => {
     let config = vscode.workspace.getConfiguration(configKey)
 
-    if (!config || !config.enabled) {
+    if (!config || ('enabled' in config&&!config.enabled)) {
         return
     }
 
@@ -56,7 +56,7 @@ const install = () => {
 const watch = () => {
     install();
     return vscode.workspace.onDidChangeConfiguration(() => {
-        // install()
+        install()
     })
 }
 
